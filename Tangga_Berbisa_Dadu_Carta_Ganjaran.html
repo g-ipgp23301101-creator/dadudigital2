@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tangga Berbisa • Misi Duit Tabungan</title>
+<style>
+*{box-sizing:border-box}
+:root{
+ --navy:#173b66;--blue:#4ba9df;--cyan:#6edbd5;--pink:#ef6b8b;
+ --yellow:#ffd45c;--purple:#8d72d8;--green:#55bd86;--ink:#20344b;
+}
+body{
+ margin:0;min-height:100vh;padding:18px;
+ font-family:Arial,Helvetica,sans-serif;color:var(--ink);
+ background:
+ radial-gradient(circle at 10% 10%,rgba(110,219,213,.25),transparent 24%),
+ radial-gradient(circle at 90% 5%,rgba(239,107,139,.20),transparent 25%),
+ linear-gradient(135deg,#eef9ff 0%,#fff8fc 50%,#fffbea 100%);
+ overflow-x:hidden;
+}
+body:before,body:after{
+ content:"✦";position:fixed;font-size:42px;color:rgba(23,59,102,.12);
+ animation:float 4s ease-in-out infinite;pointer-events:none
+}
+body:before{left:3%;top:35%}body:after{right:4%;top:68%;animation-delay:1.5s}
+@keyframes float{50%{transform:translateY(-18px) rotate(15deg);opacity:.55}}
+.app{max-width:1120px;margin:auto}
+header{
+ position:relative;overflow:hidden;text-align:center;padding:20px 16px 18px;
+ background:rgba(255,255,255,.94);border:3px solid var(--navy);
+ border-radius:30px;box-shadow:0 8px 0 #c7d6e4;
+}
+header:after{
+ content:"";position:absolute;left:-20%;bottom:0;width:140%;height:5px;
+ background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink),var(--yellow),var(--green),var(--blue));
+ background-size:300% 100%;animation:rainbow 5s linear infinite
+}
+@keyframes rainbow{to{background-position:300% 0}}
+.logo{font-size:42px;display:inline-block;animation:bob 2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-5px) rotate(-3deg)}}
+h1{margin:0;color:var(--navy);font-size:clamp(30px,6vw,52px);letter-spacing:.5px}
+.tag{display:inline-block;margin-top:8px;padding:7px 14px;border-radius:30px;background:#edf6fc;color:#42637e;font-weight:800}
+.grid{display:grid;grid-template-columns:1.05fr .95fr;gap:20px;margin-top:20px}
+.card{
+ background:rgba(255,255,255,.94);border:3px solid var(--navy);
+ border-radius:28px;padding:20px;box-shadow:0 8px 0 #c7d6e4
+}
+.card h2{margin:0 0 15px;text-align:center;color:var(--navy);font-size:25px}
+.dice-stage{
+ height:285px;display:flex;align-items:center;justify-content:center;
+ perspective:1000px;position:relative
+}
+.dice-stage:before{
+ content:"";position:absolute;width:190px;height:34px;bottom:42px;border-radius:50%;
+ background:rgba(23,59,102,.15);filter:blur(8px);transform:scale(.8)
+}
+.dice{
+ width:155px;height:155px;border-radius:31px;
+ display:flex;align-items:center;justify-content:center;
+ color:var(--navy);font-size:82px;font-weight:1000;
+ background:linear-gradient(145deg,#fff,#e9f5fb);
+ border:7px solid var(--navy);
+ box-shadow:0 15px 0 #9bb1c5,inset 0 0 0 7px #f8fcff;
+ transform-style:preserve-3d;position:relative;z-index:2;
+}
+.rolling{animation:spinDice .11s linear infinite}
+@keyframes spinDice{
+ 0%{transform:rotateX(0) rotateY(0) rotateZ(0) scale(1)}
+ 25%{transform:rotateX(110deg) rotateY(80deg) rotateZ(35deg) scale(1.08)}
+ 50%{transform:rotateX(210deg) rotateY(180deg) rotateZ(75deg) scale(.94)}
+ 75%{transform:rotateX(300deg) rotateY(270deg) rotateZ(120deg) scale(1.08)}
+ 100%{transform:rotateX(360deg) rotateY(360deg) rotateZ(180deg) scale(1)}
+}
+.rollbtn{
+ width:100%;border:0;border-radius:18px;padding:16px;
+ color:#fff;background:linear-gradient(135deg,#173b66,#275b91);
+ font-size:20px;font-weight:1000;cursor:pointer;
+ box-shadow:0 6px 0 #0d2948;transition:.15s
+}
+.rollbtn:hover{transform:translateY(-2px);filter:brightness(1.07)}
+.rollbtn:active{transform:translateY(4px);box-shadow:0 2px 0 #0d2948}
+.rollbtn:disabled{opacity:.55;cursor:not-allowed}
+.result{
+ min-height:50px;margin:13px 0 4px;text-align:center;
+ font-size:20px;font-weight:1000;color:var(--navy)
+}
+.bonus{
+ display:none;text-align:center;padding:11px;margin:5px 0 12px;
+ background:#fff2ad;border:3px solid #efb72d;border-radius:16px;
+ font-weight:1000;color:#725500;animation:pop .4s ease
+}
+.bonus.show{display:block}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.rule{
+ border-radius:18px;padding:13px;text-align:center;font-weight:1000;
+ transition:.2s
+}
+.rule:hover{transform:translateY(-3px)}
+.blue{background:#e1f4ff;border:3px solid var(--blue)}
+.red{background:#ffe5eb;border:3px solid var(--pink)}
+.rule .icon{font-size:25px}.rule small{font-size:12px;color:#50677e}
+.score-head{
+ display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px
+}
+.live{
+ display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:20px;
+ background:#e9fff4;color:#218257;font-size:12px;font-weight:1000
+}
+.dot{width:8px;height:8px;border-radius:50%;background:#36bd78;animation:pulse 1.2s infinite}
+@keyframes pulse{50%{transform:scale(1.6);opacity:.45}}
+table{width:100%;border-collapse:separate;border-spacing:0 9px}
+th{font-size:12px;color:#718397;text-transform:uppercase;letter-spacing:.5px}
+td{background:#f7fbfe;padding:10px 8px;font-weight:900}
+td:first-child{border-radius:15px 0 0 15px}td:last-child{border-radius:0 15px 15px 0;text-align:center}
+.team{display:flex;align-items:center;gap:8px}
+.badge{
+ width:34px;height:34px;flex:0 0 34px;border-radius:11px;
+ display:inline-flex;align-items:center;justify-content:center;color:white;
+ box-shadow:0 3px 0 rgba(0,0,0,.12)
+}
+.score{
+ width:82px;padding:9px;border:2px solid #c2d1dd;border-radius:12px;
+ text-align:center;font-size:19px;font-weight:1000;color:var(--navy);background:#fff
+}
+.score:focus{outline:3px solid #bfe9ff;border-color:var(--blue)}
+.controls{display:flex;gap:9px;margin-top:12px}
+.small{
+ flex:1;border:0;border-radius:13px;padding:10px;
+ background:#edf4f8;color:var(--navy);font-size:14px;font-weight:1000;cursor:pointer
+}
+.small:hover{background:#dcecf5}
+.note{text-align:center;color:#748698;font-size:12px;margin-top:11px;line-height:1.45}
+.mini-title{
+ margin:17px 0 8px;padding:9px 12px;border-radius:13px;
+ background:#f2f7fb;font-weight:1000;color:#42617c
+}
+.sparkles{font-size:16px;letter-spacing:8px;text-align:center;color:#d3a82e;margin-top:5px;animation:twinkle 2s infinite}
+@keyframes twinkle{50%{opacity:.45;transform:scale(.97)}}
+@media(max-width:760px){
+ body{padding:10px}.grid{grid-template-columns:1fr;gap:15px}.card{padding:15px}
+ .dice-stage{height:245px}.dice{width:130px;height:130px;font-size:68px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*:before,*:after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div class="logo">🎲</div>
+ <h1>TANGGA BERBISA</h1>
+ <div class="tag">💰 Misi Duit Tabungan • Cabar • Jawab • Menang!</div>
+ <div class="sparkles">✦ ✧ ✦ ✧ ✦</div>
+</header>
+
+<div class="grid">
+<section class="card">
+ <h2>🎲 DADU DIGITAL</h2>
+ <div class="dice-stage"><div id="dice" class="dice">1</div></div>
+ <button id="roll" class="rollbtn" type="button">🎲 BALING DADU</button>
+ <div id="result" class="result">Siapa yang akan mendapat nombor bertuah? 👀</div>
+ <div id="bonus" class="bonus">🎉 DAPAT 6! Baling sekali lagi — masih giliran kumpulan yang sama!</div>
+ <div class="rules">
+  <div class="rule blue"><div class="icon">🔵</div>KAD BIRU<br><small>Jawab betul = +1 markah</small></div>
+  <div class="rule red"><div class="icon">🔴</div>KAD MERAH<br><small>Jawab betul = +2 markah</small></div>
+ </div>
+</section>
+
+<section class="card">
+ <div class="score-head">
+  <h2 style="margin:0">🏆 CARTA GANJARAN</h2>
+  <div class="live"><span class="dot"></span> LIVE</div>
+ </div>
+ <div class="mini-title">⭐ Masukkan markah setiap kumpulan</div>
+ <table>
+  <thead><tr><th style="text-align:left">Kumpulan</th><th>Markah</th></tr></thead>
+  <tbody id="scores"></tbody>
+ </table>
+ <div class="controls">
+  <button class="small" id="save" type="button">💾 SIMPAN</button>
+  <button class="small" id="clear" type="button">↺ KOSONGKAN</button>
+ </div>
+ <div class="note">🔵 Soalan biru betul → 1 markah<br>🔴 Soalan merah betul → 2 markah<br><b>Markah diisi sendiri oleh guru.</b></div>
+</section>
+</div>
+</div>
+
+<script>
+const dice=document.getElementById('dice');
+const roll=document.getElementById('roll');
+const result=document.getElementById('result');
+const bonus=document.getElementById('bonus');
+let busy=false;
+
+function rollDice(){
+ if(busy)return;
+ busy=true;roll.disabled=true;bonus.classList.remove('show');
+ roll.textContent='🎲 DADU SEDANG BERPUTAR...';
+ dice.classList.add('rolling');
+
+ let elapsed=0;
+ const timer=setInterval(()=>{
+  dice.textContent=Math.floor(Math.random()*6)+1;
+  elapsed+=90;
+  if(elapsed>=1170){
+   clearInterval(timer);
+   const n=Math.floor(Math.random()*6)+1;
+   dice.textContent=n;
+   dice.classList.remove('rolling');
+   if(n===6){
+    result.textContent='🎉 NOMBOR 6!';
+    bonus.classList.add('show');
+    roll.textContent='🎲 BALING LAGI!';
+   }else{
+    result.textContent='🎲 Nombor dadu: '+n;
+    roll.textContent='🎲 BALING DADU';
+   }
+   busy=false;roll.disabled=false;
+  }
+ },90);
+}
+roll.addEventListener('click',rollDice);
+
+const colors=['#4ba9df','#ef6b8b','#55bd86','#8d72d8','#f2b84b','#5f91d7'];
+const icons=['⭐','🚀','🌟','💎','🏆','✨'];
+const tbody=document.getElementById('scores');
+
+for(let i=1;i<=6;i++){
+ const tr=document.createElement('tr');
+ const saved=localStorage.getItem('tb'+i)||'';
+ tr.innerHTML=
+ '<td><div class="team"><span class="badge" style="background:'+colors[i-1]+'">'+icons[i-1]+'</span>Kumpulan '+i+'</div></td>'+
+ '<td><input class="score" type="number" min="0" inputmode="numeric" value="'+saved+'" placeholder="0" aria-label="Markah Kumpulan '+i+'"></td>';
+ tbody.appendChild(tr);
+}
+document.querySelectorAll('.score').forEach((x,i)=>{
+ x.addEventListener('input',()=>localStorage.setItem('tb'+(i+1),x.value));
+});
+document.getElementById('save').addEventListener('click',()=>{
+ document.querySelectorAll('.score').forEach((x,i)=>localStorage.setItem('tb'+(i+1),x.value));
+ result.textContent='💾 Markah semua kumpulan telah disimpan!';
+});
+document.getElementById('clear').addEventListener('click',()=>{
+ if(confirm('Kosongkan semua markah kumpulan?')){
+  document.querySelectorAll('.score').forEach(x=>x.value='');
+  for(let i=1;i<=6;i++)localStorage.removeItem('tb'+i);
+  result.textContent='🧹 Carta markah telah dikosongkan.';
+ }
+});
+</script>
+</body>
+</html>
